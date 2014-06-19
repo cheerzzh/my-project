@@ -1,0 +1,13 @@
+1	Intel	2200 Mission College Blvd. Santa Clara, CA, USA	7658080
+2	AMD	One AMD Place P.O. Box 3453 Sunnyvale, CA, USA	7494000
+3	Gigabyte	6 Bao Chiang Road, Taipei,Taiwan	89124000
+4	MSI	69 Lide Street, Taipei, Taiwan	32345599
+5	Biostar	18551 East Gale Avenue, City of Industry, CA, USA	5811055
+6	Transcend	70 XingZhong Road, Taipei, Taiwan	27928000
+7	Corsair	46221 Landing Parkway, Fremont, CA, USA	8575518
+8	Seagate	10200 S. De Anza Blvd, Cupertino, CA, USA	7324283
+9	Antec	47900 Fremont Blvd. Fremont, CA, USA	7701200
+10	Creative	1523 Cimarron Plaza, Stillwater, OK, USA	7426622
+11	Belkin	12045 E. Waterfront Drive Playa Vista, CA, USA	7515100
+12	HP	3000 Hanover Street Palo Alto, CA, USA	8575518
+13	Lenovo	1009 Think Place, Morrisville, NC, USA	9684465
