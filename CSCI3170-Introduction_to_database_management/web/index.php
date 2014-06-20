@@ -20,7 +20,7 @@ $dbstr = "(DESCRIPTION=
 		(SERVICE_NAME=db12.cse.cuhk.edu.hk)
 	)
 )";
-$conn = oci_connect('c019', 'lmfjkaed', '137.189.88.200/db12.cse.cuhk.edu.hk');
+$conn = oci_connect('username', 'password', '137.189.88.200/db12.cse.cuhk.edu.hk');
 if(!$conn){
 	die("ERROR: cannot establish the connection\n");
 }

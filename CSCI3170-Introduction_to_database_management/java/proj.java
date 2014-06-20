@@ -12,8 +12,8 @@ public class proj {
     static Connection conn = null;
 
     private final static String DB_Url = "jdbc:oracle:thin:@db12.cse.cuhk.edu.hk:1521:db12";
-    private final static String DB_User = "c019";
-    private final static String DB_Password = "lmfjkaed";
+    private final static String DB_User = "username";
+    private final static String DB_Password = "password";
 
     private final static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
