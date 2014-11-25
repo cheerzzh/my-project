@@ -1,0 +1,342 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="./hw2.css" rel="stylesheet"/>
+  <title>CSCI3290- Contrast Preserving Decolorization</title>
+</head>
+
+<body>	
+	<div id="content">
+    <div id="inner">
+     <h1 class="title">CSCI3290 Assignment 2- Contrast Preserving Decolorization</h1>
+     <div class="paragraph">Zhou Zhihao, 1155014412, <i>The Chinese University of Hong Kong</i> <br /> Oct 27, 2014</div>
+     <div id="begin">
+
+
+      <div class="right subtitle" style="margin-left:5px;margin-right:50px;">
+       <img src="pic/2_linear_mapping.jpg" height="190" class="pic" />
+       <div class="sub">Decolorized Image (2)</div>
+     </div> <!--end right-->
+     <div class="right subtitle" style="margin-left:5px;margin-right:5px;">
+       <img src="pic/2.png" height="190" class="pic" />
+       <div class="sub">Original Color Image (2)</div>
+     </div> <!--end right-->
+
+
+     <div class="right subtitle" style="margin-left:5px;margin-right:5px;">
+       <img src="pic/11_linear_mapping.jpg" height="190" class="pic" />
+       <div class="sub">Decolorized Image (11)</div>
+     </div> <!--end right-->
+     <div class="right subtitle" style="margin-left:50px;margin-right:5px;">
+       <img src="pic/11.png" height="190" class="pic" />
+       <div class="sub">Original Color Image (11)</div>
+     </div> <!--end right-->
+
+
+
+
+
+
+
+     <div class="paragraph pad">
+       <h4>Introduction</h4>
+       <br /> 
+       <p> Decolorization – the process to transform a color image to a grayscale one – is a basic tool in digital printing, stylized black-and-white photography, and in many single channel image processing applications. In this project, an optimization approach will be implemented aiming at maximally preserving the original color contrast. 
+
+       </p>
+     </div>
+
+
+     <div class="paragraph pad">
+
+       <div class="block right" style="width:420px;">
+         <h4>Basic Decolorization Algorithm</h4>
+         <br /> 
+         <p>  The Algorithm is as follows  <br /> <br /></p>
+         <p>Step 1: Convert the input image to LAB space.</p>
+         <p>The algorithm to converted RGB space into LAB space is from here:</p>
+         <a href="http://www.mathworks.com/matlabcentral/fileexchange/24009-rgb2lab/content/RGB2Lab.m">Mark Ruzon from C code by Yossi Rubner, 23 September 1997.</a>
+         <br /> <br />
+         <p>Step 2: Compute Delta(p,q)for each two neighboring pixel based on the Euclidian distance in Lab color space.</p>
+         <br /> <br />
+         <p>Step 3: Construct the linear system based </p>
+         <br /> <br />
+         <p>Step 4: Solve the liear system using '\' operator in Matlab and reconstruct the gray image </p>
+         <br /> <br />
+         <p>We can notice that this method is not stable, possibly due to the ambuiguity in the color order.</p>
+       </div>
+
+
+
+       <div class="right subtitle" style="margin-left:15px;margin-right:40px;">
+         <img src="pic/6_Basic_Decolorization.jpg" height="168" class="pic" />
+         <div class="sub"> Decolorized by Basic Method</div>
+       </div> <!--end right-->
+       <div class="right subtitle" style="margin-left:5px;margin-right:5px;">
+         <img src="pic/6.png" height="168" class="pic" />
+         <div class="sub">Original Color Image (6)</div>
+       </div> <!--end right-->
+
+
+       <div class="right subtitle" style="margin-left:10px;margin-right:40px;">
+         <img src="pic/7_Basic_Decolorization.jpg" height="50" class="pic" />
+         <div class="sub">Decolorized by Basic Method</div>
+       </div> <!--end right-->
+       <div class="left subtitle" style="margin-left:0px;margin-right:5px;">
+         <img src="pic/7.png" height="50" class="pic" />
+         <div class="sub">Original Color Image (7)</div>
+       </div> <!--end right-->
+
+     </p>
+
+   </div> <!--paragraphpad-->
+
+   <div class="block right" style="width:auto;">
+    <div class="paragraph pad">
+      <h4>Real-time Contrast Preserving Linear Mapping Decolorization</h4>
+      <br /> 
+      <p>
+       We use the degree one multivariate polynomial model to represent grayscale output g, which is indeed a linear com- bination of color channels. We further enforce a positive constraint and an energy conservation constraint on the weights so that the grayscale image is within the range [0, 1]. The constraints also serve a second purpose: the neutral color would have the same intensity after color-to-gray conversion. Sim- ple though the defined constraints are, they work effectively in re- ducing the solution space in a discrete fashion.
+     </p>
+     <br />
+     <p>
+       Empirically, it is found that slightly varying the weights wr , wg , wb would not change grayscale appearance too much. We propose to discretize the solution space of wr , wg , wb in the range of [0, 1] with interval 0.1 and perform the search to find the optimal value.
+       <p><br />
+         Since the mapping is only linear and the optimization method is exhaustive search over certain candidates, it may produces unsatisfactory results on some color images.
+       </p>
+     </div>
+   </div>
+   <div class="block" style="clear:both;">
+     <div class="right subtitle" style="margin-left:15px;margin-right:50px;">
+       <img src="pic/4_linear_mapping.jpg" height="160" class="pic" />
+       <div class="sub">Decolorized by Linear Mapping</div>
+     </div> <!--end right-->
+     <div class="right subtitle" style="margin-left:15px;margin-right:5px;">
+       <img src="pic/4.png" height="160" class="pic" />
+       <div class="sub">Original Color Image (4)</div>
+     </div> <!--end right-->
+
+
+     <div class="right subtitle" style="margin-left:15px;margin-right:5px;">
+       <img src="pic/6_linear_mapping.jpg" height="160" class="pic" />
+       <div class="sub">Decolorized by Linear Mapping</div>
+     </div> <!--end right-->
+     <div class="right subtitle" style="margin-left:15px;margin-right:5px;">
+       <img src="pic/6.png" height="160" class="pic" />
+       <div class="sub">Original Color Image (6)</div>
+     </div> <!--end right-->
+
+   </div>
+
+   <div class="block right" style="width:auto;">
+    <div class="paragraph pad">
+      <h4>Decolorization Evaluation: Color Contrast Preserving Ratio (CCPR) on 4 methods</h4>
+      <br /> 
+      <p>
+        To quantitatively evaluate the decolorization algorithms, we propose a new metric. It is based on the finding that if the color difference δ is smaller than a threshold τ, it becomes nearly invisible in human vision. The task of contrast-preserving decolorization is therefore to maintain color change that is perceivable by human.</p><br/>
+        <p>The 4 decolorization algorithms are as follows:</p> <br/>
+        <p>
+
+          <li>Basic Decolorization Algorithm metioned before, cprgb2color()</li>
+          <li>Matlab default rgb2color() function (average on RGB channels)</li>
+          <li>L channel in Lab color space</li>
+          <li>Real-time Contrast Preserving Linear Mapping Decolorization</li>
+        </p><br/>
+        <p>
+          Resulting CCPR: <br/>
+          average score under different thresholds (1 to 15)
+        </p>
+
+        <table>
+          <thead>
+            <tr><th>Sample Images</th><th>cprgb2color()</th><th>Matlab rgb2color()</th><th>L Channel in Lab</th><th>Linear Mapping</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td> 0.209158</td><td>0.356491</td><td>0.266511</td><td>0.340339</td></tr>
+            <tr><td>2</td><td>0.943325</td><td>0.860531</td><td>0.928000</td><td>0.864799</td></tr>
+            <tr><td>3</td><td> 0.654819</td><td>0.827005</td><td>0.632354</td><td>0.730671</td></tr>
+            <tr><td>4</td><td> 0.435429</td><td>0.500386</td><td>0.472529</td><td>0.495572</td></tr>
+            <tr><td>5</td><td> 0.483057</td><td>0.548331</td><td>0.647499</td><td>0.593041</td></tr>
+            <tr><td>6</td><td> 0.697269</td><td>0.322822</td><td>0.375607</td><td>0.553334</td></tr>
+            <tr><td>7</td><td> 0.988644</td><td>0.379993</td><td>0.680732</td><td>0.329731</td></tr>
+            <tr><td>8</td><td> 0.545917</td><td>0.100930</td><td>0.393925</td><td> 0.664103</td></tr>
+            <tr><td>9</td><td> 0.247654</td><td> 0.320915</td><td>0.337602</td><td> 0.296252</td></tr>
+            <tr><td>10</td><td> 0.419936</td><td>0.545748</td><td>0.478594</td><td> 0.590657</td></tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+    </div>
+
+
+
+    <div class="paragraph">
+      <h4>Gallery</h4> 
+      <br/>Each row contains decolorized image by 4 algorithms in corresponding order:<br/><br/>
+      cprgb2color(), Matlab rgb2color(), L Channel in Lab, Linear Mapping
+      <div class ="pic">
+        <table >
+          <tr><td><img src="pic/1.png" height=115 width="auto"  /></td>
+            <td><img src="pic/1_Basic_Decolorization.jpg" height=115 width="auto"  /></td>
+            <td><img src="pic/1_rgb2color.jpg" height=115 width="auto"  /></td>
+            <td> <img src="pic/1_L_channel.jpg" height=115 width="auto"  /></td>
+            <td> <img src="pic/1_linear_mapping.jpg" height=115 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/2.png" height=152 width="auto"  /></td>
+            <td><img src="pic/2_Basic_Decolorization.jpg" height=152 width="auto"  /></td>
+            <td> <img src="pic/2_rgb2color.jpg" height=152 width="auto"  /></td>
+            <td><img src="pic/2_L_channel.jpg" height=152 width="auto"  /></td>
+            <td><img src="pic/2_linear_mapping.jpg" height=152 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/3.png" height=105 width="auto"  /></td>
+            <td><img src="pic/3_Basic_Decolorization.jpg" height=105 width="auto"  /></td>
+            <td> <img src="pic/3_rgb2color.jpg" height=105 width="auto"  /></td>
+            <td><img src="pic/3_L_channel.jpg" height=105 width="auto"  /></td>
+            <td><img src="pic/3_linear_mapping.jpg" height=105 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/4.png" height=126 width="auto"  /></td>
+            <td><img src="pic/4_Basic_Decolorization.jpg" height=126 width="auto"  /></td>
+            <td> <img src="pic/4_rgb2color.jpg" height=126 width="auto"  /></td>
+            <td><img src="pic/4_L_channel.jpg" height=126 width="auto"  /></td>
+            <td><img src="pic/4_linear_mapping.jpg" height=126 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/5.png" height=144 width="auto"  /></td>
+            <td><img src="pic/5_Basic_Decolorization.jpg" height=144 width="auto"  /></td>
+            <td> <img src="pic/5_rgb2color.jpg" height=144 width="auto"  /></td>
+            <td><img src="pic/5_L_channel.jpg" height=144 width="auto"  /></td>
+            <td><img src="pic/5_linear_mapping.jpg" height=144 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/6.png" height=156 width="auto"  /></td>
+            <td><img src="pic/6_Basic_Decolorization.jpg" height=156 width="auto"  /></td>
+            <td> <img src="pic/6_rgb2color.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/6_L_channel.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/6_linear_mapping.jpg" height=156 width="auto"  /></td>
+          </tr>
+        </table>
+        
+
+        <table >
+          <tr><td><img src="pic/7.png" height=34 width="auto"  /></td>
+            <td><img src="pic/7_Basic_Decolorization.jpg" height=34 width="auto"  /></td>
+            <td> <img src="pic/7_rgb2color.jpg" height=34 width="auto"  /></td>
+            <td><img src="pic/7_L_channel.jpg" height=34 width="auto"  /></td>
+            <td><img src="pic/7_linear_mapping.jpg" height=34 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/8.png" height=153 width="auto"  /></td>
+            <td><img src="pic/8_Basic_Decolorization.jpg" height=153 width="auto"  /></td>
+            <td> <img src="pic/8_rgb2color.jpg" height=153 width="auto"  /></td>
+            <td><img src="pic/8_L_channel.jpg" height=153 width="auto"  /></td>
+            <td><img src="pic/8_linear_mapping.jpg" height=153 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/9.png" height=118 width="auto"  /></td>
+            <td><img src="pic/9_Basic_Decolorization.jpg" height=118 width="auto"  /></td>
+            <td> <img src="pic/9_rgb2color.jpg" height=118 width="auto"  /></td>
+            <td><img src="pic/9_L_channel.jpg" height=118 width="auto"  /></td>
+            <td><img src="pic/9_linear_mapping.jpg" height=118 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/10.png" height=156 width="auto"  /></td>
+            <td><img src="pic/10_Basic_Decolorization.jpg" height=156 width="auto"  /></td>
+            <td> <img src="pic/10_rgb2color.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/10_L_channel.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/10_linear_mapping.jpg" height=156 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/11.png" height=156 width="auto"  /></td>
+            <td><img src="pic/11_Basic_Decolorization.jpg" height=156 width="auto"  /></td>
+            <td> <img src="pic/11_rgb2color.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/11_L_channel.jpg" height=156 width="auto"  /></td>
+            <td><img src="pic/11_linear_mapping.jpg" height=156 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/12.png" height=104 width="auto"  /></td>
+            <td><img src="pic/12_Basic_Decolorization.jpg" height=104 width="auto"  /></td>
+            <td> <img src="pic/12_rgb2color.jpg" height=104 width="auto"  /></td>
+            <td><img src="pic/12_L_channel.jpg" height=104 width="auto"  /></td>
+            <td><img src="pic/12_linear_mapping.jpg" height=104 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/17.png" height=87 width="auto"  /></td>
+            <td><img src="pic/17_Basic_Decolorization.jpg" height=87 width="auto"  /></td>
+            <td> <img src="pic/17_rgb2color.jpg" height=87 width="auto"  /></td>
+            <td><img src="pic/17_L_channel.jpg" height=87 width="auto"  /></td>
+            <td><img src="pic/17_linear_mapping.jpg" height=87 width="auto"  /></td>
+          </tr>
+        </table>
+
+        <table >
+          <tr><td><img src="pic/23.png" height=104 width="auto"  /></td>
+            <td><img src="pic/23_Basic_Decolorization.jpg" height=104 width="auto"  /></td>
+            <td> <img src="pic/23_rgb2color.jpg" height=104 width="auto"  /></td>
+            <td><img src="pic/23_L_channel.jpg" height=104 width="auto"  /></td>
+            <td><img src="pic/23_linear_mapping.jpg" height=104 width="auto"  /></td>
+          </tr>
+        </table>
+
+
+      </div>
+    </div>
+
+    <div class = "block">
+      <div class="paragraph" style="margin-top:10px;margin-left:85px; margin-bottom:30px;">
+
+
+        <h4>Reference: </h4>
+        <br />
+        <ul>
+          <li><a href="http://www.cse.cuhk.edu.hk/~leojia/papers/decolorization_iccp12.pdf">Contrast Preserving Decolorization</a></li> <br />
+          <li><a href="http://www.cse.cuhk.edu.hk/~leojia/papers/decolorization_ijcv14.pdf">Contrast Preserving Decolorization with Perception-Based
+            Quality Metrics</a></li> <br />
+            <li><a href="http://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/">Three algorithms for converting color to grayscale</a></li> <br />
+            <li><a href="http://www.cse.cuhk.edu.hk/~leojia/projects/color2gray/c2gslides.pptx">Slides by Prof. Jiaya Jia</a></li> 
+          </ul>
+
+        </div>
+      </div>
+
+      <div id="foot">
+        <span id="footer"> Copyright &copy; 2014 Zhou Zhihao. All rights reserved.</span>
+        <a id="contact" style="font-size:12px;" href="mailto:cheerzzh@gmail.com">Contact</a>
+      </div>
+
+    </div>
+  </div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,312 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="./hw3.css" rel="stylesheet"/>
+  <title>CSCI3290- Image Quailting  | Zhou Zhihao</title>
+</head>
+
+<body>  
+  <div id="content">
+    <div id="inner">
+      <h1 class="title">CSCI3290 Assignment 3- Image Quilting for Texture Synthesis and Transfer</h1>
+      <div class="paragraph">Zhou Zhihao, 1155014412 <i>The Chinese University of Hong Kong</i> <br /> Nov 16, 2014</div>
+      <div id="begin">
+        <div class="block">
+          
+
+          <div class="right subtitle" style="margin-left:25px;margin-right:55px;">
+            <img src="pic/2.jpg" height="320" class="pic" />
+            <div class="sub">Texture Transfered Image</div>
+          </div> <!--end right-->
+          <div class="right subtitle" style="margin-left:10px;margin-right:55px;">
+            <img src="pic/leonardo.jpg" height="310" class="pic" />
+            <div class="sub">Target Correspondence Image</div>
+          </div> <!--end right-->
+          <div class="right subtitle" style="margin-left:10px;margin-right:55px;">
+            <img src="pic/1.jpg" height="310" class="pic" />
+            <div class="sub">Sythesized Texture</div>
+          </div> <!--end right-->
+          <div class="right subtitle" style="margin-left:25px;margin-right:40px;">
+            <img src="pic/texture.jpg" height="80" class="pic" />
+            <div class="sub">Texture</div>
+          </div> <!--end right-->
+          
+      </div>
+
+          <div class="paragraph pad">
+            <h4>Introduction</h4><br />
+            <p> 
+
+    
+              In the past decade computer graphics experienced a wave of activity in the area of image-based rendering as researchers explored the idea of capturing samples of the real world as images and us- ing them to synthesize novel views rather than recreating the entire physical world from scratch. This, in turn, fueled interest in image-based texture synthesis algorithms. Such an algorithm should be able to take a sample of texture and generate an unlimited amount of image data which, while not exactly like the original, will be perceived by humans to be the same texture. Furthermore, it would be useful to be able to transfer texture from one object to anther (e.g. the ability to cut and paste material properties on arbitrary objects). Texture synthesis is achieved in this project with "image quilting," a technique that rearranges sample patches taken from the source image and merge them. This particular implementation of texture synthesis lends itself to a different application: texture transfer. Texture transfer entails "painting" the features of an input image with the texture of a different image. 
+
+            </p>
+          </div>
+
+
+
+
+        <div class="paragraph pad">
+          <h4>Texture Synthesis Method</h4><br />
+          <p> Image quilting is performed by taking a number of square "sample patches" from the source image and then fitting them together to form a new texture image. The naive implementation of this technique would be to fill the output texture image with randomly chosen samples. This generates obvious edge artifacts between the different patches, as well as a lack of continuity in content in adjacent patches. <br /><br />
+
+            A better approach is to find a patch in the input texture that has some agreement with the pixels in the overlapping region (e.g. small SSD error). This will already produce pretty good results but still has some unwanted edge artifacts. To get rid of those, a minimum error cut for the overlapping region will be searched using dynamic programming and merge the neighbouring patch smoothing<br /><br />
+            <div class="block ">
+              <div class="right subtitle" style="margin-right:50px;margin-top:35px">
+                <img src="pic/wall.jpg" height="330" class="pic" />
+                <div class="sub">Synthsized Image</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:55px;margin-top:75px;margin-left:135px;">
+                <img src="pic/3.jpg" height="100" class="pic" />
+                <div class="sub">Input Texture Image</div>
+              </div> <!--end right-->
+
+              <div class="left subtitle" style="margin-right:0px;margin-top:-190px">
+                <img src="pic/bu.jpg" height="330" class="pic" />
+                <div class="sub">Synthsized Image</div>
+              </div> <!--end right-->
+              <div class="left subtitle" style="margin-right:35px;margin-top:20px;margin-left:65px;">
+                <img src="pic/30.jpg" height="100" class="pic" />
+                <div class="sub">Input Texture Image</div>
+              </div> <!--end right-->
+
+
+            </div>
+
+            
+          Morever, the minmun-cut boundary between the neighouring patch will be filtered to make the transition better. Here are some sample results.
+          </p>
+
+          <div class="block center" style="margin-top:30px;">
+            <div class="right subtitle" style="margin-right:0px;">
+              <img src="pic/apple2.jpg" height="300" class="pic" />
+              <div class="sub">Minimun-Cut Boundary Matching</div>
+            </div> <!--end right-->
+            <div class="left subtitle" style="margin-right:0px;margin-left:0px;">
+              <img src="pic/apple1.jpg" height="300" class="pic" />
+              <div class="sub">Simply Matching Overlaps</div>
+            </div> <!--end right-->
+          </div>
+
+        </div> <!--paragraphpad-->
+
+        
+
+
+
+
+
+
+
+        <div class="block">
+          <div class="right subtitle" style="margin-top:40px;margin-left:10px;margin-right:55px;">
+            <img src="pic/toast.png" height="240" class="pic" />
+            <div class="sub">Source- A Lovely Toast </div>
+          </div> <!--end right-->
+
+          <div class="right subtitle" style="margin-right:10px;margin-left:40px;margin-top:40px">
+            <img src="pic/man.jpg" height="240" class="pic" />
+            <div class="sub">Target- Handsome Richard Feynman</div>
+          </div> <!--end right-->
+          
+          
+
+
+          <div class="paragraph pad">
+            <h4>Texture Transfer Method</h4><br />
+            <p> The texture transfer algorithm uses most of the texture synthesis algorithm; however, instead of choosing patches that have the best overlaps with their neighbor patches, the transfer algorithm chooses a patch based on its overlap <i>and</i> its correspondence with a target image at the same time. The algorithm synthesizes the texture depicting the target image over the course of several iterations. Each iteration, the patch size is reduced and the correspondence to neighboring texture patches becomes a more significant factor in patch choice, as opposed to the correspondence with the target image. On every iteration except the first, a potential patch is compared to the <i>previously synthesized</i> texture image as well as the target image. This helps to preserve the content  contained in the previously synthesized image. Since earlier images take the target content into account more heavily, it is important for following iterations to preserve the previously rendered details. Within each iteration, the patch size will be reduced to 70% of orginal size and alpha will be multiplied by 0.8. At a high level, the algorithm essentially lays out the rough image before focusing on rendering a believable texture. <br /> <br/>The starting block size here is 60 pxiels and overlapping region is 20, along with initial alpha to be 10. It is  clear that the transfered image is getting more and more close to the target image.
+            </p> 
+
+            <div class="block center" style="margin-top:30px;">
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/iter3.jpg" height="310" class="pic" />
+                <div class="sub">Third Iteration</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;">
+                <img src="pic/iter2.jpg" height="310" class="pic" />
+                <div class="sub">Second Iteration</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/iter1.jpg" height="310" class="pic" />
+                <div class="sub">Initial Synthesis</div>
+              </div> <!--end right-->
+
+            </div>
+          </div>  
+        </div>
+        
+
+        
+        <div class="paragraph">
+          <h4>More Texture Transfer Examples</h4>
+          <br />
+          <div class="block center" style="margin-top:30px;">
+           
+            <div class="left subtitle" style="margin-right:28px;margin-left:0px;">
+              <img src="pic/painting.jpg" height="210" class="pic" />
+              <div class="sub">Texture</div>
+            </div> <!--end right-->
+             <div class="left subtitle" style="margin-right:28px;">
+              <img src="pic/us.jpg" height="210" class="pic" />
+              <div class="sub">Target</div>
+            </div> <!--end right-->
+            <div class="left subtitle" style="margin-right:0px;margin-left:0px;">
+              <img src="pic/us1.jpg" height="210" class="pic" />
+              <div class="sub">Texture Transferred</div>
+            </div> <!--end right-->
+
+
+          </div>
+          <div class="block center" style="margin-top:30px;">
+            
+            <div class="left subtitle" style="margin-right:22px;margin-left:0px;">
+              <img src="pic/star.jpg" height="200" class="pic" />
+              <div class="sub">Texture</div>
+            </div> <!--end right-->
+            <div class="left subtitle" style="margin-right:31px;">
+              <img src="pic/night.jpg" height="200" width="300" class="pic" />
+              <div class="sub">Target</div>
+            </div> <!--end right-->
+            <div class="left subtitle" style="margin-right:0px;margin-left:0px;">
+              <img src="pic/night1.jpg" height="200" width="300" class="pic" />
+              <div class="sub">Texture Transferred</div>
+            </div> <!--end right-->
+
+
+          </div>
+
+
+        </div> <!--end paragraph -->
+
+
+
+
+
+        <div class="paragraph" >
+          <h4>Extra Parts</h4>
+          <br />
+          <strong>1. Use of filtering operation to improve efficiency</strong> <br />
+          Function xcorr2() in Matlab is utilized to compute the SSD among overlapped region and the input texture efficiently.
+          <br /><br />
+
+          <strong>2. Varing patch size and overlap size</strong><br />
+          While the texture synthesis algorithm produces some nice results, it is highly dependent on a number of parameters including sample size, number of samples, overlap size, source image size, and tolerance for less-than-best-match patches. To achieve acceptable results, these parameters must often be adjusted. There are several problems that can occur. 
+          <br />
+          <br />
+          <strong>-Patch size:</strong> If the samlple patch size may be too samll that it  will fail to "fit" the entire texture units. For instance, if a brick wall image is sampled, but the sample sizes does not include entire bricks, the algorithm will not be able to accurately reproduce brick sizes in the output texture. By varing the patch size, we could find that 
+
+           <div class="block center" style="margin-top:30px;">
+
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/a20.jpg" height="245" class="pic" />
+                <div class="sub">Patch Size =  20 pixels</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;">
+                <img src="pic/a30.jpg" height="245" class="pic" />
+                <div class="sub">Patch Size = 30 pixels </div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/a70.jpg" height="245" class="pic" />
+                <div class="sub">Patch Size = 70 pixels </div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/can.png" height="150" class="pic" />
+                <div class="sub">Texture</div>
+              </div> <!--end right-->
+
+            </div>
+          <br />
+           <strong>-Overlap size:</strong> Generally speaking, larger the overlap size , better the texture synthesis performance. But the increase of overlap size will also require more computing power and thus lower the efficiency of the syntheiss algorithm. Usually, use overalp size around 1/3 of the patch size is appropriate. Experienting with following overlap size, we can get the following result.
+          <div class="block center" style="margin-top:30px;">
+
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/s1.jpg" height="245" class="pic" />
+                <div class="sub">Overlap Size =  1 pixels</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;">
+                <img src="pic/s5.jpg" height="245" class="pic" />
+                <div class="sub">Overlap Size = 5 pixels </div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/s20.jpg" height="245" class="pic" />
+                <div class="sub">Overlap Size = 20 pixels </div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/7.jpg" height="150" class="pic" />
+                <div class="sub">Texture</div>
+              </div> <!--end right-->
+
+            </div>
+
+          <br />
+          <br /><br />
+
+          <strong>3. Varing correspondence parameter Alpha</strong><br />
+          As can be seen in the example texture-transferred images, the results are not astounding. This is partly because the texture transfer algorithm introduces additional parameters that should vary to accomodate different images. The number of iterations and the weighting of target correspondence versus texture correspondence are probably the most significant factors. There is an undeniable trade-off between the  texture quality and the accuracy of the representation of the target image. When the alpha is samll, the syntheis result tend to be good while the transfer effect may not be satisfactory. As the alpha going large, while the result is highly consistent with the target image, texture quality may be poor. Morever, to render the details of the target image, very small samples are required, which also tend to detract from the quality of the texture.  Altering the aplha value, we can get the following output.
+
+          <div class="block center" style="margin-top:30px;">
+              
+               
+              <div class="right subtitle" style="margin-right:10px;">
+                <img src="pic/ap5.jpg" height="260" class="pic" />
+                <div class="sub">Alpha = 0.5</div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/ap20.jpg" height="260" class="pic" />
+                <div class="sub">Alpha = 20  </div>
+              </div> <!--end right-->
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/toast.png" height="177" class="pic" />
+                <div class="sub">Texture</div>
+              </div> <!--end right-->
+
+              <div class="right subtitle" style="margin-right:10px;margin-left:0px;">
+                <img src="pic/lady.jpg" height="177" class="pic" />
+                <div class="sub">Texture</div>
+              </div> <!--end right-->
+              
+             
+
+            </div>
+          <br />
+          <br />
+         
+
+        </div>
+        
+        
+      </div>
+
+      <div class = "block">
+        <div class="paragraph" >
+
+
+          <h4>Reference</h4>
+          <br />
+          <ul>
+            <li><a href="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/papers/efros-siggraph01.pdf">image quilting for texture synthesis and transfer</a></li> <br />
+          
+          </ul>
+          <br />
+          <br />
+
+        </div>
+      </div>
+
+      
+      
+
+      <div id="foot">
+        <span id="footer"> Copyright &copy; 2014 Zhou Zhihao. All rights reserved.</span>
+        <a id="contact" style="font-size:12px;" href="mailto:cheerzzh@gmail.com">Contact</a>
+      </div>
+
+    </div>
+  </div>
+  
+
+
+</body>
+</html>

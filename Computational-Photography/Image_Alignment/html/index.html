@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="imagealign.css" rel="stylesheet"/>
+<title>CSCI3290 Image Alignment Assignment | Zhou Zhihao</title>
+</head>
+
+<body>  
+    <div id = "content">
+    <div id="inner">
+<h1 class="title">CSCI3290 Computational Photography 
+ </br>Assignment 1: Image Alignment</h1>
+
+<div class="paragraph">Zhou Zhihao, 1155014412, <i>The Chinese University of Hong Kong</i></div>
+
+    <div id="begin">
+        <div id="triple" class="left">
+          <img src="image/p1.tif" height="300" class="pic" />
+        </div>
+
+<div class="paragraph pad">
+            <h4>Introduction</h4>
+            </br>
+            <p>Sergei Mikhailovich Prokudin-Gorskii (1863-1944) came up with a way to produce color photos ahead of his time. He recorded three exposures of a single scene on glass plates, covering the camera lense with a color filter (red,blue, and green) for each. To reproduce the color image, he would project all three exposures on top of one another while covering each projector with an appropriately colored filter. The digitized negatives are made by Library of Congress and available online.
+            </p>
+        </div>
+     
+<div class="paragraph pad">
+            <h4>Objective</h4>
+            </br>
+            <p>The goal of this project is to automatically align and format three digitized monochrome images into one single color image, with as few artifacts as possible by utlizing single-scale and multi-sacle aligning algorithms. Besides, several optimazions will be conducted  to make the resulting images as nearly as the manually restored versions by LoC.
+            </p>
+        </div>
+    
+    
+    <div class="paragraph pad">
+    <h4>Single-scale Alignment</h4>
+    </br>
+    <p>
+        One image are aligned to the base image along a displacement vector over both horizontal and vertical direction. Here the Blue channel is chosen as the base image and we try to make the shifted G and R channel "similar" to the B-channel by minimizing the sum of square diference over ingredient matices of both candidates. Generally there will be a search range for the displacement vector (here I fix them from -20 to 20 both horizontally and vertically). Since the channels may have irregular borders, the sum of square difference will only be calculated on the center 64% of the whole channel. 
+    </p>
+    </div>
+    
+    </div>
+    <div id="contrast">
+    <div class="subtitle left">
+    <img src="image/single-original.jpg" height="350"  class="pic"/>
+    <div class="sub">An original small-size image  </div>
+    </div>
+    <div class="subtitle right">
+    <img src="image/single-align.jpg" height="350"  class="pic"/>
+    <div class="sub">The image after single-scale alignment</div>
+    </div>
+  </div>
+
+
+    <div class="paragraph">
+    <h4>Multi-Scale Implementation</h4>
+    </br>
+    <p>Although the single-scale alignment algorithm works quite well for images in the range of 400x400 pixels or smaller. It does not align efficiently on high-quality image due to the extensive computation required for the exhaustive search when the displacement search or image resolution is too large. Thus a coarse-to-fine search strategy using the image pyramid will be implemented. The raw image will be rescaled at multiple scale (by a factor of 2) and we can get a series of 6 image pyramids. On each stage, the image will go through a Gaussian filter to remove the high frequencies and scaled by one half. This process of blurring and scaling is repeated for specified times to get the smallest scaled image.
+
+    </p>
+    </br>
+    <p>To align the image, the single-scale alignement is applied to the smallest image with the initial displacement vector(0,0) and search range from -5 to 5 pixels on both directions. The resulting displacement vector wil be scaled up by factor 2 and serve as the starting vector for next level image. Eventually, we can obtain the displacement vector for the orignal image after 6 steps of computation. Since for each stage, the displacement vector has been partially aligned at preceeding alignments, the total number of shifts required is drastically reduced and we can the alignment is much faster than single-scale implementation.
+       
+    </p>
+</div>
+<div class="subtitle center full">
+    <img src="image/p3.tif" height="600"  class="pic center"/>
+    <div class="sub">A scaled version of an image processed at a size larger than 3000x3000 pixels </div>
+    </div>
+    <div class="paragraph">
+    <h4>Extras Parts</h4>
+    </div>
+    <div class="paragraph">
+    <h5>Similarity based on gradients</h5> 
+    </br>
+    To align the three channel better, I choose the ingredient image as the compare standards since channels do not actually have the same brightness values for corresponding pixels. 
+   
+  <div id="contrast">
+    <div class="subtitle left">
+    <img src="image/r-channel.jpg" height="300"  class="pic"/>
+    <div class="sub">Sample R-channel of an Image </div>
+    </div>
+    <div class="subtitle right">
+    <img src="image/r-channel-grad.jpg" height="300"  class="pic"/>
+    <div class="sub">Gradient Image of sample R-channel</div>
+    </div>
+  </div>
+    <h5>Auto Border Cropping</h5>
+    </br>
+    <p>There are many border artifacts exist in most color image created from its 3 monochromatic counterparts by using alignment. To automatically detect the possible borders and  crop the image, I implement the following procedures.</p>
+    <div id="contrast">
+    <div class="subtitle left">
+    <img src="image/no-crop1.jpg" height="310" id="noCrop" class="pic"/>
+    <div class="sub">An Uncropped Image </div>
+    </div>
+    <div class="subtitle right">
+    <img src="image/after-crop1.jpg" height="310"  class="pic"/>
+    <div class="sub">An Auto-cropped Image </div>
+    </div>
+     </div>
+    <p>The auto cropping algorithm is as follows:  </p> <br />
+    <p>1. The aligned image is cropped according to the previous caculated displacment vector.</p>
+    <p>2. Apply the edge detection function to the rough-cropped image and get the edge image of the aligned image.</p>
+    <p>3. Compute the Hough transform of the image using the hough function and then Find the peaks in the Hough transform matrix using the houghpeaks function. Finally find lines in the image using the houghlines function with mininal length at 50 pixels. </p>
+    <p>4. Crop the image based on the detected possible border. Since in some image, there may exist long line segments inside the image which we desire to maintain, I only treat a line segment as the border when it lies outside of the center 4/6 of the image.</p>
+    <br/>
+    <p>Reference: <a href="http://www.mathworks.com/help/images/hough-transform.html#buh9ylp-26">Hough Transform</a></p>
+
+
+
+
+    <div class="paragraph">
+        <div id="contrast">
+            <div class="subtitle left">
+                <img src="image/to-crop.jpg" height="270"  class="pic "/>
+                <div class="sub">Original Aligned Image </div>
+            </div>
+            <div class="subtitle right">
+                <img src="image/edge.jpg" height="270"  class="pic "/>
+                <div class="sub"> Edge-detected Image </div>
+            </div>
+            <div class="subtitle left">
+                <img src="image/border.jpg" height="270"  class="pic "/>
+                <div class="sub">Border labelled Image </div>
+            </div>
+            <div class="subtitle right">
+                <img src="image/cropped.jpg" height="270"  class="pic "/>
+                <div class="sub">Cropped Image </div>
+            </div>
+        </div>
+        </div>
+    <div class="paragraph">
+   
+    <h4>Efficiency</h4>
+    </br>
+    My codes can process a roughly 400x400 pixel images in around 3 seconds and large images in the order of 3000x3000 pixels in 40-50 seconds depending on the user settings and computing power. The images are aligned quite well such that one can hardly distinguish that the image is composed of 3 monochromatic images in most cases. <br /> <br />
+    
+    <div id="contrast">
+    <div class="subtitle left">
+                <img src="image/p4.jpg" height="240"  class="pic "/>
+                            </div>
+            <div class="subtitle right">
+                <img src="image/p5.jpg" height="240"  class="pic "/>
+                
+            </div>
+            </div>
+           
+    
+    </div>
+    </div>
+    <div id="foot">
+        <span id="footer"> Copyright &copy; 2014 Zhou Zhihao. All rights reserved.</span>
+        <a id="contact" style="font-size:12px;" href="mailto:cheerzzh@gmail.com">Contact</a>
+    </div>
+</body>
+</html>
